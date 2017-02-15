@@ -14,35 +14,60 @@ defined( 'ABSPATH' ) or die( 'No!' );
 add_action( 'wp_ajax_nopriv_wgrl_release_post', 'wgrl_new_release_handler' );
 function wgrl_new_release_handler() {
     $raw_data = file_get_contents( 'php://input' );
+    header( "Content-Type: application/json" );
 
+    // Check secret
     $hash = hash_hmac( 'sha1', $raw_data, get_option('wgrl-webhook-secret') );
     if ( 'sha1=' . $hash != $_SERVER['HTTP_X_HUB_SIGNATURE'] ) {
-        header( "Content-Type: application/json" );
         echo json_encode( [ 'success' => false, 'error' => 'Failed to validate the secret' ] );
         exit;
     }
 
     $data = json_decode($raw_data, true);
+    $release_published = wgrl_add_post($data);
+    echo json_encode( [ 'success' => true, 'release_published' => $release_published ] );
+    exit;
+}
+
+function wgrl_add_post($data) {
     if ( isset($data['action']) && isset($data['release']) ) {
         global $wpdb;
-        $new_post = [
-            'post_title' => wp_strip_all_tags( $data['release']['tag_name'] ),
-            'post_content' => $data['release']['body'],
-            'post_author' => get_option('wgrl-post-author'),
-            'post_status' => 'publish',
-        ];
-        if (get_option('wgrl-webhook-secret')) {
-            $new_post['post_type'] = 'release';
-        } else {
-            $new_post['tax_input'] = [ 'tag' => 'release' ];
+        try {
+            $new_post = [
+                'post_title' => wp_strip_all_tags( $data['release']['tag_name'] ),
+                'post_content' => $data['release']['body'],
+                'post_author' => get_option('wgrl-post-author'),
+                'post_status' => 'publish',
+            ];
+            if (get_option('wgrl-webhook-secret')) {
+                $new_post['post_type'] = 'release';
+            } else {
+                $new_post['tax_input'] = [ 'tag' => 'release' ];
+            }
+
+            wp_insert_post( $new_post );
+        } catch(Exception $e) {
+            return false;
         }
-
-        wp_insert_post( $new_post );
+        return true;
     }
+    return false;
+}
 
-    header( "Content-Type: application/json" );
-    echo json_encode( [ 'success' => true ] );
-    exit;
+add_action('init', 'wgrl_add_custom_post_type');
+function wgrl_add_custom_post_type() {
+    if (get_option('wgrl-webhook-secret')) {
+        $args = [
+            'labels' => [
+                'name' => 'Releases',
+                'singular_name' => 'Release'
+            ],
+            'public' => true,
+            'show_ui' => true,
+            'show_in_menu' => true
+        ];
+        register_post_type('release', $args);
+    }
 }
 
 add_action( 'admin_menu', 'wgrl_menu' );
