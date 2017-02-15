@@ -9,6 +9,8 @@
  * Text Domain: wp-github-release-listener
  */
 
+// TODO: shortcode for: full changelog (option: download link), latest release post (option: download link), latest release title, latest release link, latest release downlaod button
+
 defined( 'ABSPATH' ) or die( 'No!' );
 
 add_action( 'wp_ajax_nopriv_wgrl_release_post', 'wgrl_new_release_handler' );
@@ -34,17 +36,21 @@ function wgrl_add_post($data) {
         global $wpdb;
         try {
             $new_post = [
+                // TODO: Is tag name always a title?
                 'post_title' => wp_strip_all_tags( $data['release']['tag_name'] ),
                 'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
+                'meta_input' => [
+                    // TODO: download link, option to append to body
+                    'download_link' => DOWNLOAD_LINK
+                ]
             ];
             if (get_option('wgrl-webhook-secret')) {
                 $new_post['post_type'] = 'release';
             } else {
                 $new_post['tax_input'] = [ 'tag' => 'release' ];
             }
-
             wp_insert_post( $new_post );
         } catch(Exception $e) {
             return false;
