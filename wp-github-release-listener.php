@@ -23,15 +23,17 @@ function wgrl_new_release_handler() {
     }
 
     $data = json_decode($raw_data);
+    global $wpdb;
     if ($data['action'] && $data['release'] && $data['action'] == 'published') {
-        $new_post = array(
+        $new_post = [
             'post_title' => wp_strip_all_tags( $data['release']['tag_name'] ),
             'post_content' => $data['release']['body'],
             'post_author' => get_option('wgrl-post-author'),
+            'post_status' => 'publish',
             'meta_input' => [
                 'raw_wgrl_data' => $data
             ]
-        );
+        ];
         wp_insert_post( $new_post );
     }
 
