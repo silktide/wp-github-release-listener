@@ -95,34 +95,35 @@ function wgrl_register_settings() {
 }
 
 function wgrl_options_page() {
-    echo '<div class="wrap">
-        <h2>GitHub release listener settings</h2>
-        <form method="post" action="options.php" style="text-align: left;">';
+    echo '<div class="wrap">';
+    echo '<h2>GitHub release listener settings</h2>';
+    echo '<form method="post" action="options.php" style="text-align: left;">';
     settings_fields('wgrl-options');
     do_settings_sections( 'wgrl-options' );
-    echo '<table>
-            <tr>
-                <th>Webhook secret</th>
-                <td><input type="password" name="wgrl-webhook-secret" value="'. esc_attr( get_option('wgrl-webhook-secret') ) .'" /></td>
-            </tr>
-            <tr>
-                <th>Assign posts to user</th>
-                <td>'. wp_dropdown_users(['name' => 'wgrl-post-author', 'echo' => false, 'selected' => get_option('wgrl-post-author') ]). '</td>
-            </tr>
-            <tr>
-                <th>Post type</th>
-                <td>
-                    <select name="wgrl-custom-post-type">
-                        <option value="0">Post tagged "release"</option>
-                        <option value="1" '. (get_option('wgrl-webhook-secret') ? 'selected' : '') . '>Custom post type "release"</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th>Webhook callback URL</th>
-                <td><code>'. esc_url(admin_url('admin-ajax.php')) . '?action=wgrl_release_post</code></td>
-            </tr>
-        </table>';
+    echo '<table>';
+    echo '    <tr>';
+    echo '        <th>Webhook secret</th>';
+    echo '            <td><input type="password" name="wgrl-webhook-secret" value="'. esc_attr( get_option('wgrl-webhook-secret') ) .'" /></td>';
+    echo '    </tr>';
+    echo '    <tr>';
+    echo '        <th>Assign posts to user</th>';
+    echo '        <td>'. wp_dropdown_users(['name' => 'wgrl-post-author', 'echo' => false, 'selected' => get_option('wgrl-post-author') ]). '</td>';
+    echo '    </tr>';
+    echo '    <tr>';
+    echo '        <th>Post type</th>';
+    echo '        <td>';
+    echo '            <select name="wgrl-custom-post-type">';
+    echo '                <option value="0">Post tagged "release"</option>';
+    echo '                <option value="1" '. (get_option('wgrl-webhook-secret') ? 'selected' : '') . '>Custom post type "release"</option>';
+    echo '            </select>';
+    echo '        </td>';
+    echo '    </tr>';
+    echo '    <tr>';
+    echo '        <th>Webhook callback URL</th>';
+    echo '        <td><code>'. esc_url(admin_url('admin-ajax.php')) . '?action=wgrl_release_post</code></td>';
+    echo '    </tr>';
+    echo '</table>';
     submit_button();
-    echo '</form></div>';
+    echo '</form>';
+    echo '</div>';
 }
