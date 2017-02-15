@@ -64,7 +64,7 @@ function wgrl_options_page() {
     do_settings_sections( 'wgrl-options' );
     echo '<table><tr><th>Webhook secret</th><td><input type="password" name="wgrl-webhook-secret" value="'. esc_attr( get_option('wgrl-webhook-secret') ) .'" /></td></tr>';
     echo '<tr><th>Assign posts to user</th><td>'. wp_dropdown_users(['name' => 'wgrl-post-author', 'echo' => false, 'selected' => get_option('wgrl-post-author') ]). '</td></tr>';
-    echo '<tr><th>Webhook callback URL</th><td><code>'. esc_url(admin_url('admin-ajax.php')) . '?actions=wgrl_release_post</code></td></tr></table>';
+    echo '<tr><th>Webhook callback URL</th><td><code>'. esc_url(admin_url('admin-ajax.php')) . '?action=wgrl_release_post</code></td></tr></table>';
     submit_button();
     echo '</form></div>';
 }
