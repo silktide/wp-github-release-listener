@@ -9,7 +9,7 @@
  * Text Domain: wp-github-release-listener
  */
 
-// TODO: shortcode for: full changelog (option: download links), latest release post (option: download links), latest release title, latest release link, latest release downlaod button
+// TODO: shortcode - latest release downlaod button
 // TODO: option sections
 
 defined( 'ABSPATH' ) or die( 'No!' );
@@ -61,6 +61,7 @@ function wgrl_add_post($data) {
     return false;
 }
 
+add_shortcode( 'wgrl_changelog', 'wgrl_changelog' );
 function wgrl_changelog( $atts ) {
     $options = shortcode_atts( [
         'limit' => false,
@@ -71,15 +72,7 @@ function wgrl_changelog( $atts ) {
 
     $return = '';
 
-    $args = [
-        'posts_per_page' => $options['limit']
-    ];
-    if (get_option('wgrl-custom-post-type')) {
-        $args['post_type'] = 'release';
-    } else {
-        $args['tag'] = wgrl_get_custom_tag();
-    }
-    $query = new WP_Query( $args );
+    $query = new WP_Query( wgrl_get_query_args($options['limit']) );
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
             $query->the_post();
@@ -101,7 +94,6 @@ function wgrl_changelog( $atts ) {
     wp_reset_postdata();
     return $return;
 }
-add_shortcode( 'wgrl_changelog', 'wgrl_changelog' );
 
 add_action('init', 'wgrl_add_custom_post_type');
 function wgrl_add_custom_post_type() {
@@ -119,6 +111,18 @@ function wgrl_add_custom_post_type() {
         // TODO: is this actulally supported?
         post_type_supports( 'release', 'custom-fields' );
     }
+}
+
+function wgrl_get_query_args($limit) {
+    $args = [
+        'posts_per_page' => $limit
+    ];
+    if (get_option('wgrl-custom-post-type')) {
+        $args['post_type'] = 'release';
+    } else {
+        $args['tag'] = wgrl_get_custom_tag();
+    }
+    return $args;
 }
 
 function wgrl_get_custom_tag() {
