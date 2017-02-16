@@ -37,7 +37,7 @@ function wgrl_add_post($data) {
         try {
             $new_post = [
                 // TODO: Is tag name always a title?
-                'post_title' => wp_strip_all_tags( $data['release']['tag_name'] ),
+                'post_title' => wp_strip_all_tags( $data['release']['name'] ),
                 'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
@@ -47,7 +47,7 @@ function wgrl_add_post($data) {
                     'download_zip' => $data['release']['zipball_url'],
                 ]
             ];
-            if (get_option('wgrl-webhook-secret')) {
+            if (get_option('wgrl-custom-post-type')) {
                 $new_post['post_type'] = 'release';
             } else {
                 $new_post['tax_input'] = [ 'tag' => 'release' ];
