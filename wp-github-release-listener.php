@@ -95,6 +95,35 @@ function wgrl_changelog( $atts ) {
     return $return;
 }
 
+add_shortcode( 'wgrl_latest', 'wgrl_latest' );
+function wgrl_latest($atts) {
+    $options = shortcode_atts( [
+        'type' => 'button',
+        'classes' => false
+    ], $atts );
+
+    $query = new WP_Query( wgrl_get_query_args(1) );
+    if ( $query->have_posts() ) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $classString = $options['classes'] ? ' class="'.$options['classes'].'"' : '';
+            switch ($options['type']) {
+                case 'title':
+                    return get_the_title();
+                case 'zip_url':
+                    return get_post_meta(get_the_id(), 'download_zip', true);
+                case 'tar_url':
+                    return get_post_meta(get_the_id(), 'download_zip', true);
+                case 'zip_link':
+                    return '<a href="'.get_post_meta(get_the_id(), 'download_zip', true).'"'.$classString.'>'.get_the_title().'</a>';
+                case 'tar_link':
+                    return '<a href="'.get_post_meta(get_the_id(), 'download_tar', true).'"'.$classString.'>'.get_the_title().'</a>';
+            }
+        }
+    }
+    return '';
+}
+
 add_action('init', 'wgrl_add_custom_post_type');
 function wgrl_add_custom_post_type() {
     if (get_option('wgrl-custom-post-type')) {
