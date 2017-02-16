@@ -77,11 +77,11 @@ function wgrl_changelog( $atts ) {
         while ( $query->have_posts() ) {
             $query->the_post();
             $return .= '<div class="release">';
-            $return .= ($options['title'] || $options['date']) ? '<h2 class="release-title">' : '';
+            $return .= ($options['title'] || $options['date']) ? '<h3 class="release-title">' : '';
             $return .= $options['title'] ? get_the_title() : '';
             $return .= ($options['title'] && $options['date']) ? ' - ' : '';
             $return .= $options['date'] ? get_the_date() : '';
-            $return .= ($options['title'] || $options['date']) ? '</h2>' : '';
+            $return .= ($options['title'] || $options['date']) ? '</h3>' : '';
             $return .= '<div class="release-body">'.get_the_content().'</div>';
             if ($options['downloads']) {
                 $zip_url = get_post_meta(get_the_id(), 'download_zip', true);
