@@ -137,7 +137,6 @@ function wgrl_add_custom_post_type() {
             'show_in_menu' => true
         ];
         register_post_type( 'release', $args);
-        // TODO: is this actulally supported?
         post_type_supports( 'release', 'custom-fields' );
     }
 }
