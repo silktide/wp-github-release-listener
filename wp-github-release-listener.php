@@ -61,6 +61,48 @@ function wgrl_add_post($data) {
     return false;
 }
 
+function wgrl_changelog( $atts ) {
+    $options = shortcode_atts( [
+        'limit' => false,
+        'title' => true,
+        'date' => false,
+        'downloads' => false
+    ], $atts );
+
+    $return = '';
+
+    $args = [
+        'posts_per_page' => $options['limit']
+    ];
+    if (get_option('wgrl-custom-post-type')) {
+        $args['post_type'] = 'release';
+    } else {
+        $args['tag'] = wgrl_get_custom_tag();
+    }
+    $query = new WP_Query( $args );
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $return .= '<div class="release">';
+            $return .= ($options['title'] || $options['date']) ? '<h2 class="release-title">' : '';
+            $return .= $options['title'] ? get_the_title() : '';
+            $return .= ($options['title'] && $options['date']) ? ' - ' : '';
+            $return .= $options['date'] ? get_the_date() : '';
+            $return .= ($options['title'] || $options['date']) ? '</h2>' : '';
+            $return .= '<div class="release-body">'.get_the_content().'</div>';
+            if ($options['downloads']) {
+                $zip_url = get_post_meta(get_the_id(), 'download_zip', true);
+                $tar_url = get_post_meta(get_the_id(), 'download_tar', true);
+                $return .= '<div class="release-downloads"><a href="'.$zip_url.'">[zip]</a> <a href="'.$tar_url.'">[tar]</a></div>';
+            }
+            $return .= '</div>';
+        }
+    }
+    wp_reset_postdata();
+    return $return;
+}
+add_shortcode( 'wgrl_changelog', 'wgrl_changelog' );
+
 add_action('init', 'wgrl_add_custom_post_type');
 function wgrl_add_custom_post_type() {
     if (get_option('wgrl-custom-post-type')) {
@@ -142,4 +184,7 @@ function wgrl_options_page() {
     submit_button();
     echo '</form>';
     echo '</div>';
+    echo '<script>';
+
+    echo '</script>';
 }
