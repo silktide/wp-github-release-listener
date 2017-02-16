@@ -36,23 +36,23 @@ function wgrl_add_post($data) {
         global $wpdb;
         try {
             $new_post = [
-                // TODO: Is tag name always a title?
                 'post_title' => wp_strip_all_tags( $data['release']['name'] ),
                 'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
-                'meta_input' => [
-                    // TODO: download link, option to append to body
-                    'download_tar' => $data['release']['tarball_url'],
-                    'download_zip' => $data['release']['zipball_url'],
-                ]
             ];
             if (get_option('wgrl-custom-post-type')) {
                 $new_post['post_type'] = 'release';
-            } else {
-                $new_post['tax_input'] = [ 'tag' => 'release' ];
             }
-            wp_insert_post( $new_post );
+            $post_id = wp_insert_post( $new_post );
+
+            // Post-post stuff
+            // TODO: download link, option to append to body
+            add_post_meta($post_id, 'download_tar', $data['release']['tarball_url']);
+            add_post_meta($post_id, 'download_zip', $data['release']['zipball_url']);
+            if (get_option('wgrl-tag-post') && get_option('wgrl-tag-post') != '') {
+                wp_set_object_terms( $post_id, get_option('wgrl-tag-post'), 'post_tag' );
+            }
         } catch(Exception $e) {
             return false;
         }
