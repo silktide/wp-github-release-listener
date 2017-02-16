@@ -211,7 +211,7 @@ function wgrl_options_page() {
                     <li>Create a passcode (a random string) and copy it to "Secret" field on both here and GitHub</li>
                     <li>Choose "Let me select individual events" as triggers</li>
                     <li>Tick "Release" and untick everything else</li>
-                    <li><strong>Save your plugin settings</strong></li>
+                    <li>Save your plugin settings</li>
                     <li>Click "Add webhook" on GitHub</li>
                 </ol>
                 <p>
