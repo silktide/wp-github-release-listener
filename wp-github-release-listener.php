@@ -82,7 +82,7 @@ function wgrl_changelog( $atts ) {
             $return .= ($options['title'] && $options['date']) ? ' - ' : '';
             $return .= $options['date'] ? get_the_date() : '';
             $return .= ($options['title'] || $options['date']) ? '</h3>' : '';
-            $return .= '<div class="release-body">'.get_the_content().'</div>';
+            $return .= '<div class="release-body">'.apply_filters('the_content', get_the_content()).'</div>';
             if ($options['downloads']) {
                 $zip_url = get_post_meta(get_the_id(), 'download_zip', true);
                 $tar_url = get_post_meta(get_the_id(), 'download_tar', true);
