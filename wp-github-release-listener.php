@@ -88,14 +88,14 @@ function wgrl_menu() {
         'wgrl-options',
         'wgrl_options_page'
     );
-    add_action( 'admin_init', 'wgrl_register_settings' );
 }
 
+add_action( 'admin_init', 'wgrl_register_settings' );
 function wgrl_register_settings() {
     register_setting( 'wgrl-options', 'wgrl-webhook-secret' );
     register_setting( 'wgrl-options', 'wgrl-post-author' );
-    register_setting( 'wgrl-oprions', 'wgrl-custom-post-type');
-    register_setting( 'wgrl-oprions', 'wgrl-tag-post');
+    register_setting( 'wgrl-options', 'wgrl-custom-post-type');
+    register_setting( 'wgrl-options', 'wgrl-tag-post');
 }
 
 function wgrl_options_page() {
