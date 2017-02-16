@@ -13,20 +13,21 @@ defined( 'ABSPATH' ) or die( 'No!' );
 
 add_action( 'wp_ajax_nopriv_wgrl_release_post', 'wgrl_new_release_handler' );
 function wgrl_new_release_handler() {
-    $raw_data = file_get_contents( 'php://input' );
+    // We will send a response on every request
     header( "Content-Type: application/json" );
 
-    // Check secret
+    $raw_data = file_get_contents( 'php://input' );
     $hash = hash_hmac( 'sha1', $raw_data, get_option('wgrl-webhook-secret') );
-    if ( 'sha1=' . $hash != $_SERVER['HTTP_X_HUB_SIGNATURE'] ) {
+
+    if ($_SERVER["CONTENT_TYPE"] != 'application/json') {
+        echo json_encode( [ 'success' => false, 'error' => 'Wrong content type seleted' ] );
+    } else if ( 'sha1=' . $hash != $_SERVER['HTTP_X_HUB_SIGNATURE'] ) {
         echo json_encode( [ 'success' => false, 'error' => 'Failed to validate the secret' ] );
-        exit;
+    } else {
+        $data = json_decode($raw_data, true);
+        $release_published = wgrl_add_post($data);
+        echo json_encode( [ 'success' => true, 'release_published' => $release_published ] );
     }
-
-    $data = json_decode($raw_data, true);
-    $release_published = wgrl_add_post($data);
-
-    echo json_encode( [ 'success' => true, 'release_published' => $release_published ] );
     exit;
 }
 
