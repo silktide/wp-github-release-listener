@@ -35,16 +35,9 @@ function wgrl_add_post($data) {
     if ( isset($data['action']) && isset($data['release']) ) {
         global $wpdb;
         try {
-            $content_append = '';
-            $tar_url = $data['release']['tarball_url'];
-            $zip_url = $data['release']['zipball_url'];
-            if (get_option('wgrl-add-download-link')) {
-                $content_append = '<br /><p><a href="'.$zip_url.'">[zip]</a> <a href="'.$tar_url.'">[tar]</a></p>';
-            }
-
             $new_post = [
                 'post_title' => wp_strip_all_tags( $data['release']['name'] ),
-                'post_content' => $data['release']['body'].$content_append,
+                'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
             ];
@@ -54,10 +47,10 @@ function wgrl_add_post($data) {
             $post_id = wp_insert_post( $new_post );
 
             // Post-post stuff
-            add_post_meta($post_id, 'download_tar', $tar_url);
-            add_post_meta($post_id, 'download_zip', $zip_url);
             if (get_option('wgrl-tag-post') && get_option('wgrl-tag-post') != '') {
                 wp_set_object_terms( $post_id, get_option('wgrl-tag-post'), 'post_tag' );
+            add_post_meta($post_id, 'download_tar', $data['release']['tarball_url']);
+            add_post_meta($post_id, 'download_zip', $data['release']['zipball_url']);
             }
         } catch(Exception $e) {
             return false;
@@ -132,15 +125,6 @@ function wgrl_options_page() {
     echo '    <tr>';
     echo '        <th>Tag post (only for post type post)</th>';
     echo '       <td><input type="text" name="wgrl-tag-post" value="'. esc_attr( get_option('wgrl-tag-post') ) .'" /></td>';
-    echo '    </tr>';
-    echo '    <tr>';
-    echo '        <th>Append download link to content</th>';
-    echo '        <td>';
-    echo '            <select name="wgrl-add-download-link">';
-    echo '                <option value="0">No</option>';
-    echo '                <option value="1" '.(get_option('wgrl-add-download-link') ? 'selected' : '').'>Yes</option>';
-    echo '            </select>';
-    echo '        </td>';
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Webhook callback URL</th>';
