@@ -43,7 +43,8 @@ function wgrl_add_post($data) {
                 'post_status' => 'publish',
                 'meta_input' => [
                     // TODO: download link, option to append to body
-                    'download_link' => DOWNLOAD_LINK
+                    'download_tar' => $data['release']['tarball_url'],
+                    'download_zip' => $data['release']['zipball_url'],
                 ]
             ];
             if (get_option('wgrl-webhook-secret')) {
