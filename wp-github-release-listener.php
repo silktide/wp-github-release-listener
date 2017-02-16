@@ -9,9 +9,6 @@
  * Text Domain: wp-github-release-listener
  */
 
-// TODO: shortcode - latest release downlaod button
-// TODO: option sections
-
 defined( 'ABSPATH' ) or die( 'No!' );
 
 add_action( 'wp_ajax_nopriv_wgrl_release_post', 'wgrl_new_release_handler' );
@@ -28,6 +25,7 @@ function wgrl_new_release_handler() {
 
     $data = json_decode($raw_data, true);
     $release_published = wgrl_add_post($data);
+
     echo json_encode( [ 'success' => true, 'release_published' => $release_published ] );
     exit;
 }
@@ -36,8 +34,9 @@ function wgrl_add_post($data) {
     if ( isset($data['action']) && isset($data['release']) ) {
         global $wpdb;
         try {
+            $name = $data['release']['name'] != '' ? $data['release']['name'] : $data['release']['tag_name'];
             $new_post = [
-                'post_title' => wp_strip_all_tags( $data['release']['name'] ),
+                'post_title' => wp_strip_all_tags( $name ),
                 'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
@@ -47,7 +46,7 @@ function wgrl_add_post($data) {
             }
             $post_id = wp_insert_post( $new_post );
 
-            // Post-post stuff
+            // These have to be run after inserting the post due to user right restrictions
             add_post_meta($post_id, 'download_tar', $data['release']['tarball_url']);
             add_post_meta($post_id, 'download_zip', $data['release']['zipball_url']);
             if (!get_option('wgrl-custom-post-type')) {
@@ -72,7 +71,7 @@ function wgrl_changelog( $atts ) {
 
     $return = '';
 
-    $query = new WP_Query( wgrl_get_query_args($options['limit']) );
+    $query = wgrl_get_query($options['limit']);
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
             $query->the_post();
@@ -102,7 +101,7 @@ function wgrl_latest($atts) {
         'classes' => false
     ], $atts );
 
-    $query = new WP_Query( wgrl_get_query_args(1) );
+    $query = wgrl_get_query(1);
     if ( $query->have_posts() ) {
         while ($query->have_posts()) {
             $query->the_post();
@@ -151,7 +150,7 @@ function wgrl_get_query_args($limit) {
     } else {
         $args['tag'] = wgrl_get_custom_tag();
     }
-    return $args;
+    return new WP_Query($args);
 }
 
 function wgrl_get_custom_tag() {
