@@ -115,7 +115,7 @@ function wgrl_options_page() {
     echo '<table>';
     echo '    <tr>';
     echo '        <th>Webhook secret</th>';
-    echo '            <td><input type="password" name="wgrl-webhook-secret" value="'. esc_attr( get_option('wgrl-webhook-secret') ) .'" /></td>';
+    echo '            <td><input type="password" name="wgrl-webhook-secret" value="'. esc_attr( get_option('wgrl-webhook-secret') ) .'" required /></td>';
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Assign posts to user</th>';
@@ -132,7 +132,7 @@ function wgrl_options_page() {
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Tag post (only for post type post)</th>';
-    echo '       <td><input type="text" name="wgrl-tag-post" value="'. wgrl_get_custom_tag() .'" /></td>';
+    echo '       <td><input type="text" name="wgrl-tag-post" value="'. wgrl_get_custom_tag() .'" required /></td>';
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Webhook callback URL</th>';
