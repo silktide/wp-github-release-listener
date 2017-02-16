@@ -213,9 +213,12 @@ function wgrl_options_page() {
                     <li><strong>Save your plugin settings</strong></li>
                     <li>Click "Add webhook" on GitHub</li>
                 </ol>
-                GitHub sends a ping to your payload URL on webhook activation. It can be found under Recent Deliveries and details will open upon clicking on the most recent one.
-                In case the activation was successful the Response tab should read 200 and response body should be <code>{"success":true,"release_published":false}</code>.
-                Nothing will be published on your site before an actual release is made on GitHub.
+                <p>
+                    GitHub sends a ping to your payload URL on webhook activation. It can be found under Recent Deliveries and details will open upon clicking on the most recent one.
+                    In case the activation was successful the Response tab should read 200 and response body should be <code>{"success":true,"release_published":false}</code>.
+                    Nothing will be published on your site before an actual release is made on GitHub.
+                </p>
+                <a href="#" onClick="closeHelp()">Close</a>
             </div>
 
             <table class="form-table">
@@ -263,6 +266,10 @@ function wgrl_options_page() {
         function showHelp() {
             help.show();
             helpLink.hide();
+        }
+        function closeHelp() {
+            help.hide();
+            helpLink.show();
         }
         toggleTagline();
     </script>
