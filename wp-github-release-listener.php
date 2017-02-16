@@ -57,13 +57,13 @@ function wgrl_add_post($data) {
             return false;
         }
         return true;
-    }
+    } 
     return false;
 }
 
 add_action('init', 'wgrl_add_custom_post_type');
 function wgrl_add_custom_post_type() {
-    if (get_option('wgrl-webhook-secret')) {
+    if (get_option('wgrl-custom-post-type')) {
         $args = [
             'labels' => [
                 'name' => 'Releases',
@@ -73,7 +73,9 @@ function wgrl_add_custom_post_type() {
             'show_ui' => true,
             'show_in_menu' => true
         ];
-        register_post_type('release', $args);
+        register_post_type( 'release', $args);
+        // TODO: is this actulally supported?
+        post_type_supports( 'release', 'custom-fields' );
     }
 }
 
