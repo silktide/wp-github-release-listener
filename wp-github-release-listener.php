@@ -141,7 +141,7 @@ function wgrl_add_custom_post_type() {
     }
 }
 
-function wgrl_get_query_args($limit) {
+function wgrl_get_query($limit) {
     $args = [
         'posts_per_page' => $limit
     ];
