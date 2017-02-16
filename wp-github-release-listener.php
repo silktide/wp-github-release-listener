@@ -93,6 +93,7 @@ function wgrl_register_settings() {
     register_setting( 'wgrl-options', 'wgrl-webhook-secret' );
     register_setting( 'wgrl-options', 'wgrl-post-author' );
     register_setting( 'wgrl-oprions', 'wgrl-custom-post-type');
+    register_setting( 'wgrl-oprions', 'wgrl-tag-post');
 }
 
 function wgrl_options_page() {
@@ -114,10 +115,14 @@ function wgrl_options_page() {
     echo '        <th>Post type</th>';
     echo '        <td>';
     echo '            <select name="wgrl-custom-post-type">';
-    echo '                <option value="0">Post tagged "release"</option>';
-    echo '                <option value="1" '. (get_option('wgrl-webhook-secret') ? 'selected' : '') . '>Custom post type "release"</option>';
+    echo '                <option value="0">Post</option>';
+    echo '                <option value="1" '.(get_option('wgrl-custom-post-type') ? 'selected' : '').'>Release</option>';
     echo '            </select>';
     echo '        </td>';
+    echo '    </tr>';
+    echo '    <tr>';
+    echo '        <th>Tag post</th>';
+    echo '       <td><input type="text" name="wgrl-tag-post" value="'. esc_attr( get_option('wgrl-tag-post') ) .'" /></td>';
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Webhook callback URL</th>';
