@@ -204,8 +204,7 @@ function wgrl_options_page() {
                 <h3>Connecting with GitHub</h3>
                 <ol>
                     <li>Go to your project settings on GitHub</li>
-                    <li>Select Webhooks from the menu</li>
-                    <li>Click "Add webhook" (top right)</li>
+                    <li>Select Webhooks -> Add webhook</li>
                     <li>Copy payload URL from here to GitHub</li>
                     <li>Select "application/json" as content type</li>
                     <li>Create a passcode (a random string) and copy it to "Secret" field on both here and GitHub</li>
@@ -215,9 +214,9 @@ function wgrl_options_page() {
                     <li>Click "Add webhook" on GitHub</li>
                 </ol>
                 <p>
-                    GitHub sends a ping to your payload URL on webhook activation. It can be found under Recent Deliveries and details will open upon clicking on the most recent one.
-                    In case the activation was successful the Response tab should read 200 and response body should be <code>{"success":true,"release_published":false}</code>.
-                    Nothing will be published on your site before an actual release is made on GitHub.
+                    GitHub sends a ping to your payload URL on webhook activation.
+                    If the activation was successful it should return status 200 and <code>{"success":true,"release_published":false}</code>.
+                    Please note that nothing will be published on your site before an actual release is made on GitHub.
                 </p>
                 <a href="#" onClick="closeHelp()">Close</a>
             </div>
