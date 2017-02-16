@@ -98,7 +98,7 @@ function wgrl_changelog( $atts ) {
 add_shortcode( 'wgrl_latest', 'wgrl_latest' );
 function wgrl_latest($atts) {
     $options = shortcode_atts( [
-        'type' => 'button',
+        'type' => 'zip_link',
         'classes' => false
     ], $atts );
 
