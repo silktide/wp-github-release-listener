@@ -9,7 +9,8 @@
  * Text Domain: wp-github-release-listener
  */
 
-// TODO: shortcode for: full changelog (option: download link), latest release post (option: download link), latest release title, latest release link, latest release downlaod button
+// TODO: shortcode for: full changelog (option: download links), latest release post (option: download links), latest release title, latest release link, latest release downlaod button
+// TODO: option sections
 
 defined( 'ABSPATH' ) or die( 'No!' );
 
@@ -47,10 +48,10 @@ function wgrl_add_post($data) {
             $post_id = wp_insert_post( $new_post );
 
             // Post-post stuff
-            if (get_option('wgrl-tag-post') && get_option('wgrl-tag-post') != '') {
-                wp_set_object_terms( $post_id, get_option('wgrl-tag-post'), 'post_tag' );
             add_post_meta($post_id, 'download_tar', $data['release']['tarball_url']);
             add_post_meta($post_id, 'download_zip', $data['release']['zipball_url']);
+            if (!get_option('wgrl-custom-post-type')) {
+                wp_set_object_terms( $post_id, wgrl_get_custom_tag(), 'post_tag' );
             }
         } catch(Exception $e) {
             return false;
@@ -78,6 +79,14 @@ function wgrl_add_custom_post_type() {
     }
 }
 
+function wgrl_get_custom_tag() {
+    if (get_option('wgrl-tag-post') && get_option('wgrl-tag-post') != '' ) {
+        return esc_attr( get_option('wgrl-tag-post') );
+    } else {
+        return 'release';
+    }
+}
+
 add_action( 'admin_menu', 'wgrl_menu' );
 function wgrl_menu() {
     add_options_page(
@@ -95,7 +104,6 @@ function wgrl_register_settings() {
     register_setting( 'wgrl-options', 'wgrl-post-author' );
     register_setting( 'wgrl-options', 'wgrl-custom-post-type');
     register_setting( 'wgrl-options', 'wgrl-tag-post');
-    register_setting( 'wgrl-options', 'wgrl-add-download-link');
 }
 
 function wgrl_options_page() {
@@ -124,7 +132,7 @@ function wgrl_options_page() {
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Tag post (only for post type post)</th>';
-    echo '       <td><input type="text" name="wgrl-tag-post" value="'. esc_attr( get_option('wgrl-tag-post') ) .'" /></td>';
+    echo '       <td><input type="text" name="wgrl-tag-post" value="'. wgrl_get_custom_tag() .'" /></td>';
     echo '    </tr>';
     echo '    <tr>';
     echo '        <th>Webhook callback URL</th>';
