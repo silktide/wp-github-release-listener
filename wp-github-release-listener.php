@@ -80,17 +80,24 @@ function wgrl_changelog($atts)
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
+            $titleValues = [];
+            if (wgrl_is_true($options['title'])) {
+                array_push($titleValues, get_the_title());
+            }
+            if (wgrl_is_true($options['date'])) {
+                array_push($titleValues, get_the_date());
+            }
+            $zip_url = get_post_meta(get_the_id(), 'download_zip', true);
+            $tar_url = get_post_meta(get_the_id(), 'download_tar', true);
+
             $return .= '<div class="release">';
-            $return .= (wgrl_is_true($options['title']) || wgrl_is_true($options['date'])) ? '<h3 class="release-title">' : '';
-            $return .= wgrl_is_true($options['title']) ? get_the_title() : '';
-            $return .= (wgrl_is_true($options['title']) && wgrl_is_true($options['date'])) ? ' - ' : '';
-            $return .= wgrl_is_true($options['date']) ? get_the_date() : '';
-            $return .= (wgrl_is_true($options['title']) || wgrl_is_true($options['date'])) ? '</h3>' : '';
+            $return .= (!empty($titleValues) ? '<h3 class="release-title">'.implode(' - ', $titleValues).'</h3>' : '';
             $return .= '<div class="release-body">' . apply_filters('the_content', get_the_content()) . '</div>';
             if (wgrl_is_true($options['downloads'])) {
-                $zip_url = get_post_meta(get_the_id(), 'download_zip', true);
-                $tar_url = get_post_meta(get_the_id(), 'download_tar', true);
-                $return .= '<div class="release-downloads"><a href="' . $zip_url . '">[zip]</a> <a href="' . $tar_url . '">[tar]</a></div>';
+                $return .= '<div class="release-downloads">';
+                $return .= ($zip_url && $zip_url != '') ? '<a href="' . $zip_url . '">[zip]</a>' : '';
+                $return .= ($tar_url && $tar_url != '') ? ' <a href="' . $tar_url . '">[tar]</a>' : '';
+                $return .= '</div>';
             }
             $return .= '</div>';
         }
