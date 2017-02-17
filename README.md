@@ -23,6 +23,8 @@ Please note that nothing will be published on your site before an actual release
 ## Usage
 A new post (or a custom post type is that option is selected) will be created every time a release is made on GitHub. You can display the release post with your other posts or use the shortcode to generate changelogs or links to the latest release.
 
+Example usage: Create a page named "Changelog" containig the shortcode [wgrl-changelog]
+
 ## Shortcode
 #### [wgrl-changelog]
 Displays full changelog. Shows release name and body by default. 
