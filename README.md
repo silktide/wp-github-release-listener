@@ -4,3 +4,22 @@ Wordpress plugin to listen to a GitHub webhook and create a new post every time 
 ## Installation
 - Upload the zip via WP admin panel (Plugins > Add New > Upload Plugin) or extract it to your plugins folder
 - Setup the plugin in Settings > GitHub release listener
+
+## Shortcode
+#### [wgrl-changelog]
+Displays full changelog. Shows release name and body by default. 
+Options: 
+- title - Show release title Default: true
+- date - Show release date in the post title.	Default: false
+- downloads	- Append download links (zip and tar) to every post. Default: false
+- limit	- Number (int) of releases to show.	Default: false
+
+####[wgrl-latest]
+Displays data of seleted type from the latest release. Useful for generating download links/buttons.
+Options:
+- type - What to show. Available values:
+ - 'zip-url' - return URL to download release as a zip file
+ - 'tar-url' - return URL to download release as a tar file
+ - 'zip-link' - return title, which is a link to download release as a zip file (default)
+ - 'tar-link' - return title, which is a link to download release as a tar file
+- classes	- Add classes to links. Restricted to types zip-link and tar-link only.
