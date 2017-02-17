@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Github release listener
  * Description: Listens to a GitHub webhook and creates a new post every time a release is made.
- * Version: 0.1
+ * Version: 1.0
  * Author:  Piiu Pilt, Silktide
  * Author URI: http://www.silktide.com
  * License: GPLv2
