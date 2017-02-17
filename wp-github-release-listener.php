@@ -95,8 +95,8 @@ function wgrl_changelog($attributes)
             $return .= '<div class="release-body">' . apply_filters('the_content', get_the_content()) . '</div>';
             if (wgrl_is_true($options['downloads'])) {
                 $return .= '<div class="release-downloads">';
-                $return .= ($zip_url && $zip_url != '') ? '<a href="' . $zip_url . '">[zip]</a>' : '';
-                $return .= ($tar_url && $tar_url != '') ? ' <a href="' . $tar_url . '">[tar]</a>' : '';
+                $return .= ($zip_url && $zip_url != '') ? '<a href="' . $zip_url . '">[zip]</a>&nbsp;' : '';
+                $return .= ($tar_url && $tar_url != '') ? '<a href="' . $tar_url . '">[tar]</a>' : '';
                 $return .= '</div>';
             }
             $return .= '</div>';
