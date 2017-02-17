@@ -3,7 +3,26 @@ Wordpress plugin to listen to a GitHub webhook and create a new post every time 
 
 ## Installation
 - Upload the zip via WP admin panel (Plugins > Add New > Upload Plugin) or extract it to your plugins folder
-- Setup the plugin in Settings > GitHub release listener
+
+## Setup
+- Open plugin settings (Settings > GitHub release listener)
+- Go to your project settings on GitHub
+- Select Webhooks from the menu
+- Click "Add webhook" (top right)
+- Copy payload URL from the plugin settings to GitHub
+- Select "application/json" as content type
+- Create a passcode (a random string) and copy it to "Secret" field on both plugin settings and GitHub
+- Choose "Let me select individual events" as triggers
+- Tick "Release" and untick everything else
+- Save your plugin settings
+- Click "Add webhook" on GitHub
+
+GitHub sends a ping to your payload URL on webhook activation. It can be found under Recent Deliveries and details will open upon clicking on the most recent one. In case the activation was successful the Response tab should read 200 and response body should be {"success":true,"release_published":false}. 
+
+Nothing will be published on your site before an actual release is made on GitHub.
+
+## Usage
+A new post (or a custom post type is that option is selected) will be created every time a release is made on GitHub. You can display the release post with your other posts or use the shortcode to generate changelogs or links to the latest release.
 
 ## Shortcode
 #### [wgrl-changelog]
