@@ -48,6 +48,7 @@ function wgrl_add_post($data) {
             $post_id = wp_insert_post( $new_post );
 
             // These have to be run after inserting the post due to user right restrictions
+            add_post_meta($post_id, 'release_tag', $data['release']['tag_name']);
             add_post_meta($post_id, 'download_tar', $data['release']['tarball_url']);
             add_post_meta($post_id, 'download_zip', $data['release']['zipball_url']);
             if (!get_option('wgrl-custom-post-type')) {
@@ -61,7 +62,7 @@ function wgrl_add_post($data) {
     return false;
 }
 
-add_shortcode( 'wgrl_changelog', 'wgrl_changelog' );
+add_shortcode( 'wgrl-changelog', 'wgrl_changelog' );
 function wgrl_changelog( $atts ) {
     $options = shortcode_atts( [
         'limit' => false,
@@ -77,14 +78,14 @@ function wgrl_changelog( $atts ) {
         while ( $query->have_posts() ) {
             $query->the_post();
             $return .= '<div class="release">';
-            $return .= ($options['title'] || $options['date']) ? '<h3 class="release-title">' : '';
-            $return .= $options['title'] ? get_the_title() : '';
-            $return .= ($options['title'] && $options['date']) ? ' - ' : '';
-            $return .= $options['date'] ? get_the_date() : '';
-            $return .= ($options['title'] || $options['date']) ? '</h3>' : '';
+            $return .= (wgrl_is_true($options['title']) || wgrl_is_true($options['date'])) ? '<h3 class="release-title">' : '';
+            $return .= wgrl_is_true($options['title']) ? get_the_title() : '';
+            $return .= (wgrl_is_true($options['title']) && wgrl_is_true($options['date'])) ? ' - ' : '';
+            $return .= wgrl_is_true($options['date']) ? get_the_date() : '';
+            $return .= (wgrl_is_true($options['title']) || wgrl_is_true($options['date'])) ? '</h3>' : '';
             $return .= '<div class="release-body">'.apply_filters('the_content', get_the_content()).'</div>';
-            if ($options['downloads']) {
-                $zip_url = get_post_meta(get_the_id(), 'download_zip', true);
+            if (wgrl_is_true($options['downloads'])) {
+                $zip_url = get_post_meta (get_the_id(), 'download_zip', true);
                 $tar_url = get_post_meta(get_the_id(), 'download_tar', true);
                 $return .= '<div class="release-downloads"><a href="'.$zip_url.'">[zip]</a> <a href="'.$tar_url.'">[tar]</a></div>';
             }
@@ -95,10 +96,10 @@ function wgrl_changelog( $atts ) {
     return $return;
 }
 
-add_shortcode( 'wgrl_latest', 'wgrl_latest' );
+add_shortcode( 'wgrl-latest', 'wgrl_latest' );
 function wgrl_latest($atts) {
     $options = shortcode_atts( [
-        'type' => 'zip_link',
+        'type' => 'zip-link',
         'classes' => false
     ], $atts );
 
@@ -110,13 +111,15 @@ function wgrl_latest($atts) {
             switch ($options['type']) {
                 case 'title':
                     return get_the_title();
-                case 'zip_url':
+                case 'tag':
+                    return get_post_meta(get_the_id(), 'release_tag', true);
+                case 'zip-url':
                     return get_post_meta(get_the_id(), 'download_zip', true);
-                case 'tar_url':
+                case 'tar-url':
                     return get_post_meta(get_the_id(), 'download_zip', true);
-                case 'zip_link':
+                case 'zip-link':
                     return '<a href="'.get_post_meta(get_the_id(), 'download_zip', true).'"'.$classString.'>'.get_the_title().'</a>';
-                case 'tar_link':
+                case 'tar-link':
                     return '<a href="'.get_post_meta(get_the_id(), 'download_tar', true).'"'.$classString.'>'.get_the_title().'</a>';
             }
         }
@@ -159,6 +162,10 @@ function wgrl_get_custom_tag() {
     } else {
         return 'release';
     }
+}
+
+function wgrl_is_true($option) {
+    return ($option && $option !== 'false');
 }
 
 add_action( 'admin_menu', 'wgrl_menu' );
