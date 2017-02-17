@@ -91,7 +91,7 @@ function wgrl_changelog($attributes)
             $tar_url = get_post_meta(get_the_id(), 'download_tar', true);
 
             $return .= '<div class="release">';
-            $return .= (!empty($titleValues) ? '<h3 class="release-title">'.implode(' - ', $titleValues).'</h3>' : '';
+            $return .= !empty($titleValues) ? '<h3 class="release-title">'.implode(' - ', $titleValues).'</h3>' : '';
             $return .= '<div class="release-body">' . apply_filters('the_content', get_the_content()) . '</div>';
             if (wgrl_is_true($options['downloads'])) {
                 $return .= '<div class="release-downloads">';
