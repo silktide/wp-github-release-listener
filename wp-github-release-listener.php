@@ -65,14 +65,14 @@ function wgrl_add_post($data)
 }
 
 add_shortcode('wgrl-changelog', 'wgrl_changelog');
-function wgrl_changelog($atts)
+function wgrl_changelog($attributes)
 {
     $options = shortcode_atts([
         'limit' => false,
         'title' => true,
         'date' => false,
         'downloads' => false
-    ], $atts);
+    ], $attributes);
 
     $return = '';
 
@@ -103,16 +103,17 @@ function wgrl_changelog($atts)
         }
     }
     wp_reset_postdata();
+
     return $return;
 }
 
 add_shortcode('wgrl-latest', 'wgrl_latest');
-function wgrl_latest($atts)
+function wgrl_latest($attributes)
 {
     $options = shortcode_atts([
         'type' => 'zip-link',
         'classes' => false
-    ], $atts);
+    ], $attributes);
 
     $query = wgrl_get_query(1);
     if ($query->have_posts()) {
