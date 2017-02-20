@@ -6,7 +6,7 @@
  * Author:  Piiu Pilt, Silktide
  * Author URI: http://www.silktide.com
  * License: GPLv2
- * Text Domain: wp-github-release-listener
+ * Text Domain: github-release-listener
  */
 
 defined('ABSPATH') or die('No!');
