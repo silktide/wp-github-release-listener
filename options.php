@@ -36,6 +36,8 @@
             <a href="#" onClick="closeHelp()">Close</a>
         </div>
 
+        <h1 style="margin-top: 30px;">Advanced options</h1>
+
         <table class="form-table">
             <tr>
                 <th>Assign posts to user</th>
@@ -59,6 +61,13 @@
                 <td>
                     <input type="text" name="wgrl-tag-post" value="<?= wgrl_get_custom_tag() ?>" required />
                     <p class="description">Tag is used to list posts containing release notes, e.g. using shortcode</p>
+                </td>
+            </tr>
+            <tr>
+                <th>Title prefix</th>
+                <td>
+                    <input type="text" name="wgrl-title-prefix" value="<?= get_option('wgrl-title-prefix') ?>" />
+                    <p class="description">This will be prepended to the post title (e.g. "v3.25" can become "Release v3.25")</p>
                 </td>
             </tr>
         </table>

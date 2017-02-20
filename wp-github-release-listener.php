@@ -37,9 +37,11 @@ function wgrl_add_post($data)
     if (isset($data['action']) && isset($data['release'])) {
         global $wpdb;
         try {
-            $name = $data['release']['name'] != '' ? $data['release']['name'] : $data['release']['tag_name'];
+            $name = wp_strip_all_tags($data['release']['name']);
+            $name = $name != '' ? $name : $data['release']['tag_name'];
+            $name = get_option('wgrl-title-prefix') != '' ? get_option('wgrl-title-prefix').' '.$name : $name;
             $new_post = [
-                'post_title' => wp_strip_all_tags($name),
+                'post_title' => $name,
                 'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
@@ -176,6 +178,7 @@ function wgrl_register_settings()
     register_setting('wgrl-options', 'wgrl-post-author');
     register_setting('wgrl-options', 'wgrl-custom-post-type');
     register_setting('wgrl-options', 'wgrl-tag-post');
+    register_setting('wgrl-options', 'wgrl-title-prefix');
 }
 
 function wgrl_options_page()
