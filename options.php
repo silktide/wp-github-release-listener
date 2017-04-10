@@ -42,7 +42,7 @@
             <tr>
                 <th>Assign posts to user</th>
                 <td>
-                    <?= wp_dropdown_users(['name' => 'wgrl-post-author', 'echo' => false, 'selected' => get_option('wgrl-post-author') ]) ?>
+                    <?= wp_dropdown_users(array('name' => 'wgrl-post-author', 'echo' => false, 'selected' => get_option('wgrl-post-author') )) ?>
                     <p class="description">User must have post create and publish capabilities</p>
                 </td>
             </tr>

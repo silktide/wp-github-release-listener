@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Github release listener
  * Description: Listens to a GitHub webhook and creates a new post every time a release is made.
- * Version: 1.0
+ * Version: 1.1
  * Author:  Piiu Pilt, Silktide
  * Author URI: http://www.silktide.com
  * License: GPLv2
@@ -21,13 +21,13 @@ function wgrl_new_release_handler()
     $signatureCheck = 'sha1=' . hash_hmac('sha1', $raw_data, get_option('wgrl-webhook-secret'));
 
     if ($_SERVER["CONTENT_TYPE"] != 'application/json') {
-        echo json_encode(['success' => false, 'error' => 'Wrong content type seleted']);
+        echo json_encode(array('success' => false, 'error' => 'Wrong content type selected'));
     } else if ($_SERVER['HTTP_X_HUB_SIGNATURE'] != $signatureCheck) {
-        echo json_encode(['success' => false, 'error' => 'Failed to validate the secret']);
+        echo json_encode(array('success' => false, 'error' => 'Failed to validate the secret'));
     } else {
         $data = json_decode($raw_data, true);
         $release_published = wgrl_add_post($data);
-        echo json_encode(['success' => true, 'release_published' => $release_published]);
+        echo json_encode(array('success' => true, 'release_published' => $release_published));
     }
     exit;
 }
@@ -40,12 +40,12 @@ function wgrl_add_post($data)
             $name = wp_strip_all_tags($data['release']['name']);
             $name = $name != '' ? $name : $data['release']['tag_name'];
             $name = get_option('wgrl-title-prefix') != '' ? get_option('wgrl-title-prefix').' '.$name : $name;
-            $new_post = [
+            $new_post = array(
                 'post_title' => $name,
                 'post_content' => $data['release']['body'],
                 'post_author' => get_option('wgrl-post-author'),
                 'post_status' => 'publish',
-            ];
+            );
             if (get_option('wgrl-custom-post-type')) {
                 $new_post['post_type'] = 'release';
             }
@@ -69,12 +69,12 @@ function wgrl_add_post($data)
 add_shortcode('wgrl-changelog', 'wgrl_changelog');
 function wgrl_changelog($attributes)
 {
-    $options = shortcode_atts([
+    $options = shortcode_atts(array(
         'limit' => false,
         'title' => true,
         'date' => false,
         'downloads' => false
-    ], $attributes);
+    ), $attributes);
 
     $return = '';
 
@@ -82,7 +82,7 @@ function wgrl_changelog($attributes)
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
-            $titleValues = [];
+            $titleValues = array();
             if (wgrl_is_true($options['title'])) {
                 array_push($titleValues, get_the_title());
             }
@@ -112,10 +112,10 @@ function wgrl_changelog($attributes)
 add_shortcode('wgrl-latest', 'wgrl_latest');
 function wgrl_latest($attributes)
 {
-    $options = shortcode_atts([
+    $options = shortcode_atts(array(
         'type' => 'zip-link',
         'classes' => false
-    ], $attributes);
+    ), $attributes);
 
     $query = wgrl_get_query(1);
     if ($query->have_posts()) {
@@ -145,15 +145,15 @@ add_action('init', 'wgrl_add_custom_post_type');
 function wgrl_add_custom_post_type()
 {
     if (get_option('wgrl-custom-post-type')) {
-        $args = [
-            'labels' => [
+        $args = array(
+            'labels' => array(
                 'name' => 'Releases',
                 'singular_name' => 'Release'
-            ],
+            ),
             'public' => true,
             'show_ui' => true,
             'show_in_menu' => true
-        ];
+        );
         register_post_type('release', $args);
         post_type_supports('release', 'custom-fields');
     }
@@ -189,9 +189,9 @@ function wgrl_options_page()
 
 function wgrl_get_query($limit)
 {
-    $args = [
+    $args = array(
         'posts_per_page' => $limit
-    ];
+    );
     if (get_option('wgrl-custom-post-type')) {
         $args['post_type'] = 'release';
     } else {
@@ -213,3 +213,4 @@ function wgrl_is_true($option)
 {
     return ($option && $option !== 'false');
 }
+
