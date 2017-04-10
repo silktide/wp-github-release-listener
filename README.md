@@ -34,7 +34,7 @@ Options:
 - downloads	- Append download links (zip and tar) to every post. Default: false
 - limit	- Number (int) of releases to show.	Default: false
 
-####[wgrl-latest]
+#### [wgrl-latest]
 Displays data of seleted type from the latest release. Useful for generating download links/buttons.
 Options:
 - type - What to show. Available values:
