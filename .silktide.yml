@@ -1,4 +1,7 @@
 ---
+app: wp-github-release-listener
 type: other
 source: open
+language: php
+protected: false
 ...
